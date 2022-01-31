@@ -3,7 +3,7 @@ import os
 import sys
 import random
 
-size = width, height = 300, 437
+size = width, height = 356, 545
 pygame.init()
 pygame.display.set_caption("CoLoR SwItCh")
 
@@ -28,8 +28,7 @@ def load_image(name, colorkey=None):
 
 
 def Start_screen():
-    size = width, height = 300, 437
-    background = load_image("screen_start.png")
+    background = load_image("start_screen1.png")
     screen.blit(background, (0, 0))
 
     while True:
