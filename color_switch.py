@@ -182,12 +182,12 @@ def game(name):
     e = 0
     z = 0
     m = True
-    start = Start_Finish(0.88, 15)
-    finish = Start_Finish(3.12, 525)
+    start = Start_Finish(0.88, 525)
+    finish = Start_Finish(3.12, 15)
     running = True
     flag = False
     y = 525
-    part = 2
+    part = 1
     while running:
         screen.fill((0, 0, 0))
         board.render(screen)
@@ -202,6 +202,11 @@ def game(name):
                 pygame.draw.circle(screen, 'white', (675, y), 15)
             else:
                 pygame.draw.circle(screen, 'white', (225, y), 15)
+        s = 0
+        if s == 3:
+            s -= 3
+        else:
+            s += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -217,14 +222,9 @@ def game(name):
         if f == 1:
             z = colors[random.randint(0, 3)]
             f += 1
-        #if 838 > y > 665:
-            #pygame.draw.circle(screen, e, (254, y), 15)
-            #m = False
-        #if y < 665:
-            #pygame.draw.circle(screen, z, (254, y), 15)
         if y < 0:
-            if part == 2:
-                part = 1
+            if part == 1:
+                part = 2
                 y += 540
             else:
                 return
