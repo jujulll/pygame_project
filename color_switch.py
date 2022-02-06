@@ -10,6 +10,7 @@ pygame.display.set_caption("CoLoR SwItCh")
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 fps = 15
+levels = 10
 screen.fill((0, 0, 0))
 
 
@@ -232,20 +233,9 @@ def game(name):
         clock.tick(fps)
 
 
-def Level_01():
-    game('level1.txt')
+for i in range(1, levels + 1):
+    game(f'level{i}.txt')
     completed_screen()
-    Level_02()
-
-
-def Level_02():
-    game('level2.txt')
-    completed_screen()
-    Level_03()
-
-
-def Level_03():
-    game('level3.txt')
 
 
 Start_screen()
