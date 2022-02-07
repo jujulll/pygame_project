@@ -57,8 +57,13 @@ def rules():
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.KEYDOWN:
+<<<<<<< HEAD
                 if event.key == pygame.K_ESCAPE:
                     return
+=======
+                to_game()
+                break
+>>>>>>> f84c6db755d8e0e9f672563f398db545947c741c
         pygame.display.flip()
 
 
