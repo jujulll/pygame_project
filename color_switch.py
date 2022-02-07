@@ -3,7 +3,7 @@ import os
 import sys
 import random
 
-size = width, height = 868, 685
+size = width, height = 900, 540
 pygame.init()
 pygame.display.set_caption("CoLoR SwItCh")
 
@@ -37,13 +37,12 @@ def Start_screen():
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.KEYDOWN:
-                Level_01()
+                to_game()
+                break
         pygame.display.flip()
 
 
 def completed_screen():
-    size = width, height = 700, 524
-    screen = pygame.display.set_mode(size)
     background = load_image("comp.png")
     screen.blit(background, (0, 0))
 
@@ -53,6 +52,20 @@ def completed_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 return
+        pygame.display.flip()
+
+
+def congratulation_screen():
+    background = load_image('congrat.jpg')
+    screen.blit(background, (0, 0))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
+                    terminate()
         pygame.display.flip()
 
 
@@ -233,9 +246,13 @@ def game(name):
         clock.tick(fps)
 
 
-for i in range(1, levels + 1):
-    game(f'level{i}.txt')
-    completed_screen()
+def to_game():
+    for i in range(1, levels + 1):
+        game(f'level{i}.txt')
+        if i < levels:
+            completed_screen()
+        else:
+            congratulation_screen()
 
 
 Start_screen()
