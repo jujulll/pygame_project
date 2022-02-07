@@ -284,7 +284,7 @@ def game(name, i):
 
 
 def to_game():
-    for i in range(7, levels + 1):
+    for i in range(1, levels + 1):
         game(f'level{i}.txt', i)
         if i < levels:
             completed_screen()
