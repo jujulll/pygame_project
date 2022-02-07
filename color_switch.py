@@ -3,7 +3,7 @@ import os
 import sys
 import random
 
-size = width, height = 900, 540
+size = width, height = 900, 600
 pygame.init()
 pygame.display.set_caption("CoLoR SwItCh")
 
@@ -47,7 +47,7 @@ def Start_screen():
 
 
 def rules():
-    size = width, height = 697, 594
+    size = width, height = 900, 600
     screen = pygame.display.set_mode(size)
     background = load_image("rules.png")
     screen.blit(background, (0, 0))
@@ -57,18 +57,13 @@ def rules():
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.KEYDOWN:
-<<<<<<< HEAD
                 if event.key == pygame.K_ESCAPE:
                     return
-=======
-                to_game()
-                break
->>>>>>> f84c6db755d8e0e9f672563f398db545947c741c
         pygame.display.flip()
 
 
 def completed_screen():
-    background = load_image("comp.png")
+    background = load_image("completed.png")
     screen.blit(background, (0, 0))
 
     while True:
@@ -81,7 +76,7 @@ def completed_screen():
 
 
 def congratulation_screen():
-    background = load_image('congrat.jpg')
+    background = load_image('congratulations.png')
     screen.blit(background, (0, 0))
 
     while True:
@@ -104,7 +99,7 @@ def load_level(name):
     return level_map
 
 
-def draw_level(level_map, a):
+def draw_level(level_map, a, s):
     for y in range(len(level_map)):
         for x in range(len(level_map[y])):
             if level_map[y][x] == "#":
@@ -117,7 +112,7 @@ def draw_level(level_map, a):
                 square = Sqw(x, y, a)
                 screen.blit(square.squ_rot, square.squ_rot_rect)
             elif level_map[y][x] == "$":
-                circle2 = Circle2(x, y, a)
+                circle2 = Circle2(x, y, s)
                 screen.blit(circle2.c2_rot, circle2.c2_rot_rect)
             elif level_map[y][x] == "!":
                 cross = Cross(x, y, a)
@@ -156,7 +151,7 @@ class Change_color(pygame.sprite.Sprite):
         self.image = load_image("change.png")
         self.img = pygame.transform.scale(self.image, (self.image.get_width() * 0.75, self.image.get_height() * 0.75))
         self.rot = pygame.transform.rotate(self.img, a)
-        self.rot_rect = self.rot.get_rect(centerx=x * 30, centery=y * 30 + 10)
+        self.rot_rect = self.rot.get_rect(centerx=x * 30 + 15, centery=y * 30 + 15)
 
 
 class Circle(pygame.sprite.Sprite):
@@ -164,7 +159,7 @@ class Circle(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.crcl = load_image("circle1.png")
         self.crcl_rot = pygame.transform.rotate(self.crcl, a)
-        self.crcl_rot_rect = self.crcl_rot.get_rect(centerx=x * 30, centery=y * 30)
+        self.crcl_rot_rect = self.crcl_rot.get_rect(centerx=x * 30 + 15, centery=y * 30 + 15)
 
 
 class Sqw(pygame.sprite.Sprite):
@@ -173,7 +168,7 @@ class Sqw(pygame.sprite.Sprite):
         self.squ = load_image("sqw.png")
         self.img = pygame.transform.scale(self.squ, (self.squ.get_width() // 2.5, self.squ.get_height() // 2.5))
         self.squ_rot = pygame.transform.rotate(self.img, a)
-        self.squ_rot_rect = self.squ_rot.get_rect(centerx=x * 30, centery=y * 30)
+        self.squ_rot_rect = self.squ_rot.get_rect(centerx=x * 30 + 15, centery=y * 30 - 15)
 
 
 class Circle2(pygame.sprite.Sprite):
@@ -182,7 +177,7 @@ class Circle2(pygame.sprite.Sprite):
         self.circ2 = load_image("circle2.png")
         self.img = pygame.transform.scale(self.circ2, (self.circ2.get_width() // 1.5, self.circ2.get_height() // 1.5))
         self.c2_rot = pygame.transform.rotate(self.img, a)
-        self.c2_rot_rect = self.c2_rot.get_rect(centerx=x * 30, centery=y * 30)
+        self.c2_rot_rect = self.c2_rot.get_rect(centerx=x * 30 + 15, centery=y * 30 - 15)
 
 
 class Cross(pygame.sprite.Sprite):
@@ -191,7 +186,7 @@ class Cross(pygame.sprite.Sprite):
         self.cross = load_image("cross.png")
         self.img = pygame.transform.scale(self.cross, (self.cross.get_width() // 2, self.cross.get_height() // 2))
         self.cr_rot = pygame.transform.rotate(self.img, a)
-        self.cr_rot_rect = self.cr_rot.get_rect(centerx=x * 23, centery=y * 30)
+        self.cr_rot_rect = self.cr_rot.get_rect(centerx=x * 30 - 40, centery=y * 30 + 15)
 
 
 class Star(pygame.sprite.Sprite):
@@ -200,7 +195,7 @@ class Star(pygame.sprite.Sprite):
         self.star = load_image("star.png")
         self.img = pygame.transform.scale(self.star, (self.star.get_width() // 5, self.star.get_height() // 5))
         self.st_rot = pygame.transform.rotate(self.img, a)
-        self.st_rot_rect = self.st_rot.get_rect(centerx=x * 30, centery=y * 30)
+        self.st_rot_rect = self.st_rot.get_rect(centerx=x * 30 + 15, centery=y * 30 - 15)
 
 
 class Start_Finish(pygame.sprite.Sprite):
@@ -210,42 +205,57 @@ class Start_Finish(pygame.sprite.Sprite):
         self.sf_r = self.sf.get_rect(center=(x * 225, y))
 
 
-def game(name):
-    board = Board(30, 18)
+def game(name, i):
+    board = Board(30, 20)
     board.set_view(0, 0, 30)
-    size = width, height = 900, 540
+    size = width, height = 900, 600
     screen = pygame.display.set_mode(size)
     colors = [(195, 45, 255), (124, 255, 137), (0, 255, 242), (255, 255, 0)]
     a = 20
+    s = 20
     f = 0
     e = 0
     z = 0
     m = True
-    start = Start_Finish(0.88, 525)
-    finish = Start_Finish(3.12, 15)
+    start = Start_Finish(0.88, 495)
+    finish = Start_Finish(3.12, 100)
     running = True
     flag = False
-    y = 525
+    y = 535
     part = 1
+    lvl = "_-_-LeVeL " + f'{i} -_-_'
+    lvl_font = pygame.font.SysFont('couriernew', 40)
+    lvl_font.set_bold(True)
+    lvl_start = lvl_font.render(lvl, True, (255, 255, 255))
+    lvl_finish = lvl_font.render(lvl, True, (255, 255, 255))
     while running:
         screen.fill((0, 0, 0))
         board.render(screen)
-        pygame.draw.rect(screen, (200, 200, 87), (449, 0, 2, 540))
-        draw_level(load_level(name), a)
-
+        pygame.draw.rect(screen, (255, 255, 255), (449, 0, 2, 600))
+        draw_level(load_level(name), a, s)
+        screen.blit(lvl_start, (0, 555))
+        screen.blit(lvl_finish, (450, 0))
         screen.blit(start.sf, start.sf_r)
         screen.blit(finish.sf, finish.sf_r)
         a += 3
+        s += 5
+        if f == 0:
+            e = colors[random.randint(0, 3)]
+            f += 1
+        if f == 1:
+            z = colors[random.randint(0, 3)]
+            f += 1
         if m:
             if part == 2:
-                pygame.draw.circle(screen, 'white', (675, y), 15)
+                if y <= 540:
+                    pygame.draw.circle(screen, e, (675, y), 15)
+                else:
+                    pygame.draw.circle(screen, z, (675, y), 15)
             else:
-                pygame.draw.circle(screen, 'white', (225, y), 15)
-        s = 0
-        if s == 3:
-            s -= 3
-        else:
-            s += 1
+                if y <= 450:
+                    pygame.draw.circle(screen, z, (225, y), 15)
+                else:
+                    pygame.draw.circle(screen, (255, 255, 255), (225, y), 15)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -254,26 +264,28 @@ def game(name):
                     y -= 25
                 flag = True
         if flag:
+            if part == 2 and y < 85:
+                y -= 10
+                y += 5
             y += 3
-        if f == 0:
-            e = colors[random.randint(0, 3)]
-            f += 1
-        if f == 1:
-            z = colors[random.randint(0, 3)]
-            f += 1
+
         if y < 0:
             if part == 1:
                 part = 2
-                y += 540
+                y += 600
             else:
                 return
+        if y > 600:
+            if part == 2:
+                part = 1
+                y = 0
         pygame.display.flip()
         clock.tick(fps)
 
 
 def to_game():
-    for i in range(1, levels + 1):
-        game(f'level{i}.txt')
+    for i in range(7, levels + 1):
+        game(f'level{i}.txt', i)
         if i < levels:
             completed_screen()
         else:
