@@ -3,13 +3,14 @@ import os
 import sys
 import random
 
-size = width, height = 868, 685
+size = width, height = 900, 540
 pygame.init()
 pygame.display.set_caption("CoLoR SwItCh")
 
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 fps = 15
+levels = 10
 screen.fill((0, 0, 0))
 
 
@@ -35,14 +36,33 @@ def Start_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_d and (event.mod & pygame.KMOD_LCTRL):
+                    rules()
+                    Start_screen()
+                elif event.key != pygame.K_d and (event.key != pygame.K_LCTRL):
+                    to_game()
+
+        pygame.display.flip()
+
+
+def rules():
+    size = width, height = 697, 594
+    screen = pygame.display.set_mode(size)
+    background = load_image("rules.png")
+    screen.blit(background, (0, 0))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
             elif event.type == pygame.KEYDOWN:
-                Level_01()
+                if event.key == pygame.K_ESCAPE:
+                    return
         pygame.display.flip()
 
 
 def completed_screen():
-    size = width, height = 700, 524
-    screen = pygame.display.set_mode(size)
     background = load_image("comp.png")
     screen.blit(background, (0, 0))
 
@@ -52,6 +72,20 @@ def completed_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN:
                 return
+        pygame.display.flip()
+
+
+def congratulation_screen():
+    background = load_image('congrat.jpg')
+    screen.blit(background, (0, 0))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
+                    terminate()
         pygame.display.flip()
 
 
@@ -182,12 +216,12 @@ def game(name):
     e = 0
     z = 0
     m = True
-    start = Start_Finish(0.88, 15)
-    finish = Start_Finish(3.12, 525)
+    start = Start_Finish(0.88, 525)
+    finish = Start_Finish(3.12, 15)
     running = True
     flag = False
     y = 525
-    part = 2
+    part = 1
     while running:
         screen.fill((0, 0, 0))
         board.render(screen)
@@ -202,6 +236,11 @@ def game(name):
                 pygame.draw.circle(screen, 'white', (675, y), 15)
             else:
                 pygame.draw.circle(screen, 'white', (225, y), 15)
+        s = 0
+        if s == 3:
+            s -= 3
+        else:
+            s += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -217,14 +256,9 @@ def game(name):
         if f == 1:
             z = colors[random.randint(0, 3)]
             f += 1
-        #if 838 > y > 665:
-            #pygame.draw.circle(screen, e, (254, y), 15)
-            #m = False
-        #if y < 665:
-            #pygame.draw.circle(screen, z, (254, y), 15)
         if y < 0:
-            if part == 2:
-                part = 1
+            if part == 1:
+                part = 2
                 y += 540
             else:
                 return
@@ -232,20 +266,13 @@ def game(name):
         clock.tick(fps)
 
 
-def Level_01():
-    game('level1.txt')
-    completed_screen()
-    Level_02()
-
-
-def Level_02():
-    game('level2.txt')
-    completed_screen()
-    Level_03()
-
-
-def Level_03():
-    game('level3.txt')
+def to_game():
+    for i in range(1, levels + 1):
+        game(f'level{i}.txt')
+        if i < levels:
+            completed_screen()
+        else:
+            congratulation_screen()
 
 
 Start_screen()
