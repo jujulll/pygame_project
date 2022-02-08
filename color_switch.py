@@ -89,6 +89,19 @@ def congratulation_screen():
         pygame.display.flip()
 
 
+def game_over(name, i):
+    background = load_image("game_over.png")
+    screen.blit(background, (0, 0))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                game(name, i)
+        pygame.display.flip()
+
+
 def load_level(name):
     fullname = "data/" + name
     with open(fullname, 'r') as map:
@@ -279,6 +292,9 @@ def game(name, i):
             if part == 2:
                 part = 1
                 y = 0
+        if part == 1:
+            if y > 600:
+                game_over(name, i)
         pygame.display.flip()
         clock.tick(fps)
 
