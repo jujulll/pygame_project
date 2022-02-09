@@ -10,6 +10,9 @@ pygame.display.set_caption("CoLoR SwItCh")
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 fps = 15
+global all_stars
+start_level = int(open('data/start_level.txt', 'r', encoding='utf-8').read())
+all_stars = int(open('data/all_stars.txt', 'r', encoding='utf-8').read())
 levels = 10
 screen.fill((0, 0, 0))
 
@@ -41,7 +44,7 @@ def Start_screen():
                     rules()
                     Start_screen()
                 elif event.key != pygame.K_d and (event.key != pygame.K_LCTRL):
-                    to_game()
+                    to_game(start_level)
 
         pygame.display.flip()
 
@@ -98,7 +101,7 @@ def game_over(name, i):
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.KEYDOWN:
-                game(name, i)
+                to_game(i)
         pygame.display.flip()
 
 
@@ -113,6 +116,9 @@ def load_level(name):
 
 
 def draw_level(level_map, a, s):
+    global star_in_this_level1, star_in_this_level2
+    star_in_this_level1 = []
+    star_in_this_level2 = []
     for y in range(len(level_map)):
         for x in range(len(level_map[y])):
             if level_map[y][x] == "#":
@@ -132,7 +138,12 @@ def draw_level(level_map, a, s):
                 screen.blit(cross.cr_rot, cross.cr_rot_rect)
             elif level_map[y][x] == "*":
                 star = Star(x, y, a)
+                if x > 15:
+                    star_in_this_level2.append(y)
+                else:
+                    star_in_this_level1.append(y)
                 screen.blit(star.st_rot, star.st_rot_rect)
+    print(star_in_this_level1, star_in_this_level2)
 
 
 class Board:
@@ -206,7 +217,7 @@ class Star(pygame.sprite.Sprite):
     def __init__(self, x, y, a):
         pygame.sprite.Sprite.__init__(self)
         self.star = load_image("star.png")
-        self.img = pygame.transform.scale(self.star, (self.star.get_width() // 5, self.star.get_height() // 5))
+        self.img = pygame.transform.scale(self.star, (self.star.get_width() // 7, self.star.get_height() // 7))
         self.st_rot = pygame.transform.rotate(self.img, a)
         self.st_rot_rect = self.st_rot.get_rect(centerx=x * 30 + 15, centery=y * 30 - 15)
 
@@ -219,6 +230,7 @@ class Start_Finish(pygame.sprite.Sprite):
 
 
 def game(name, i):
+    global star_in_this_level1, star_in_this_level2, all_stars
     board = Board(30, 20)
     board.set_view(0, 0, 30)
     size = width, height = 900, 600
@@ -232,6 +244,7 @@ def game(name, i):
     m = True
     start = Start_Finish(0.88, 495)
     finish = Start_Finish(3.12, 100)
+    collect_stars = []
     running = True
     flag = False
     y = 535
@@ -246,6 +259,11 @@ def game(name, i):
         board.render(screen)
         pygame.draw.rect(screen, (255, 255, 255), (449, 0, 2, 600))
         draw_level(load_level(name), a, s)
+        for aaa in collect_stars:
+            if aaa[0] == 1:
+                pygame.draw.rect(screen, 'black', [30 * 7 + 1, 30 * (aaa[1] - 1) + 1, 28, 28])
+            else:
+                pygame.draw.rect(screen, 'black', [30 * 22 + 1, 30 * (aaa[1] - 1) + 1, 28, 28])
         screen.blit(lvl_start, (0, 555))
         screen.blit(lvl_finish, (450, 0))
         screen.blit(start.sf, start.sf_r)
@@ -278,8 +296,7 @@ def game(name, i):
                 flag = True
         if flag:
             if part == 2 and y < 85:
-                y -= 10
-                y += 5
+                y -= 5
             y += 3
 
         if y < 0:
@@ -287,24 +304,42 @@ def game(name, i):
                 part = 2
                 y += 600
             else:
+                all_stars += len(collect_stars)
+                print(all_stars)
+                with open('data/all_stars.txt', 'w', encoding='utf-8') as f:
+                    print(str(all_stars), file=f)
                 return
         if y > 600:
             if part == 2:
                 part = 1
-                y = 0
-        if part == 1:
-            if y > 600:
+                y -= 600
+            elif part == 1:
                 game_over(name, i)
+        print(11111111, star_in_this_level1, star_in_this_level2)
+        if part == 1:
+            for aaa in star_in_this_level1:
+                if y < aaa * 30 - 15 and [1, aaa] not in collect_stars:
+                    collect_stars.append([1, aaa])
+        else:
+            for aaa in star_in_this_level2:
+                if y < aaa * 30 - 15 and [2, aaa] not in collect_stars:
+                    collect_stars.append([2, aaa])
+                print(aaa, y, collect_stars)
         pygame.display.flip()
         clock.tick(fps)
 
 
-def to_game():
-    for i in range(1, levels + 1):
+def to_game(start_level):
+    for i in range(start_level, levels + 1):
         game(f'level{i}.txt', i)
         if i < levels:
+            start_level += 1
+            with open('data/start_level.txt', 'w', encoding='utf-8') as f:
+                print(str(start_level), file=f)
             completed_screen()
         else:
+            with open('data/start_level.txt', 'w', encoding='utf-8') as f:
+                print('1', file=f)
             congratulation_screen()
 
 
