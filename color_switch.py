@@ -143,7 +143,6 @@ def draw_level(level_map, a, s):
                 else:
                     star_in_this_level1.append(y)
                 screen.blit(star.st_rot, star.st_rot_rect)
-    print(star_in_this_level1, star_in_this_level2)
 
 
 class Board:
@@ -305,7 +304,6 @@ def game(name, i):
                 y += 600
             else:
                 all_stars += len(collect_stars)
-                print(all_stars)
                 with open('data/all_stars.txt', 'w', encoding='utf-8') as f:
                     print(str(all_stars), file=f)
                 return
@@ -315,7 +313,6 @@ def game(name, i):
                 y -= 600
             elif part == 1:
                 game_over(name, i)
-        print(11111111, star_in_this_level1, star_in_this_level2)
         if part == 1:
             for aaa in star_in_this_level1:
                 if y < aaa * 30 - 15 and [1, aaa] not in collect_stars:
@@ -324,7 +321,6 @@ def game(name, i):
             for aaa in star_in_this_level2:
                 if y < aaa * 30 - 15 and [2, aaa] not in collect_stars:
                     collect_stars.append([2, aaa])
-                print(aaa, y, collect_stars)
         pygame.display.flip()
         clock.tick(fps)
 
