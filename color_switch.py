@@ -273,7 +273,6 @@ def game(name, i):
                 this_color = screen.get_at((7 * 30 + 15, y - 9))[:-1]
             else:
                 this_color = screen.get_at((22 * 30 + 15, y - 9))[:-1]
-            print(ball_color, this_color)
             if this_color == (255, 255, 255) or (this_color[0] < 115 and this_color[1] < 115 and this_color[2] < 115) or\
                     (this_color[0] >= 235 and this_color[1] >= 235 and this_color[2] >= 235) or\
                     (abs(this_color[0] - ball_color[0]) < 50 and abs(this_color[1] - ball_color[1]) < 50 and
