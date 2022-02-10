@@ -235,6 +235,7 @@ def game(name, i):
     size = width, height = 900, 600
     screen = pygame.display.set_mode(size)
     colors = [(195, 45, 255), (124, 255, 137), (0, 255, 242), (255, 255, 0)]
+    ball_color = (0, 0, 0)
     a = 20
     s = 20
     f = 0
@@ -267,6 +268,28 @@ def game(name, i):
         screen.blit(lvl_finish, (450, 0))
         screen.blit(start.sf, start.sf_r)
         screen.blit(finish.sf, finish.sf_r)
+        if y > 10:
+            if part == 1:
+                this_color = screen.get_at((7 * 30 + 15, y - 9))[:-1]
+            else:
+                this_color = screen.get_at((22 * 30 + 15, y - 9))[:-1]
+            print(ball_color, this_color)
+            if this_color == (255, 255, 255) or (this_color[0] < 115 and this_color[1] < 115 and this_color[2] < 115) or\
+                    (this_color[0] >= 235 and this_color[1] >= 235 and this_color[2] >= 235) or\
+                    (abs(this_color[0] - ball_color[0]) < 50 and abs(this_color[1] - ball_color[1]) < 50 and
+                     abs(this_color[2] - ball_color[2]) < 50):
+                pass
+            else:
+                if part == 1:
+                    if y >= 13 * 30 and y <= 16 * 30:
+                        pass
+                    else:
+                        game_over(name, i)
+                else:
+                    if y >= 17 * 30 and y <= 20 * 30:
+                        pass
+                    else:
+                        game_over(name, i)
         a += 3
         s += 5
         if f == 0:
@@ -279,13 +302,17 @@ def game(name, i):
             if part == 2:
                 if y <= 540:
                     pygame.draw.circle(screen, e, (675, y), 15)
+                    ball_color = e
                 else:
                     pygame.draw.circle(screen, z, (675, y), 15)
+                    ball_color = z
             else:
                 if y <= 450:
                     pygame.draw.circle(screen, z, (225, y), 15)
+                    ball_color = z
                 else:
                     pygame.draw.circle(screen, (255, 255, 255), (225, y), 15)
+                    ball_color = (255, 255, 255)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
